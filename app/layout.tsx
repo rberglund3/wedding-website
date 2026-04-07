@@ -9,13 +9,14 @@ const defaultUrl = process.env.VERCEL_URL
   : "http://localhost:3000";
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://wedding-website-mu-nine.vercel.app/'), // Replace with your actual Vercel URL
   title: "Rita & Wesley | October 24, 2026",
   description: "Join us for our wedding celebration in New York City.",
-  // This helps when you text the link to people!
   openGraph: {
     title: "The Wedding of Rita & Wesley",
     description: "October 24, 2026 — New York City",
-    images: ["/images/363545_KW_306.jpg"],
+    images: ["/images/363545_KW_306.jpg"], 
+    type: 'website',
   },
 };
 

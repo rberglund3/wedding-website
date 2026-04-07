@@ -32,11 +32,6 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
-        
-        {/* Logo / Initials */}
-        <Link href="/" className="text-2xl font-serif tracking-[0.3em] uppercase hover:opacity-70 transition">
-          R & W
-        </Link>
 
         {/* Desktop Links */}
         <div className="hidden md:flex gap-10">

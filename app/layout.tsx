@@ -9,9 +9,14 @@ const defaultUrl = process.env.VERCEL_URL
   : "http://localhost:3000";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Rita & Wesley | October 24, 2026",
+  description: "Join us for our wedding celebration in New York City.",
+  // This helps when you text the link to people!
+  openGraph: {
+    title: "The Wedding of Rita & Wesley",
+    description: "October 24, 2026 — New York City",
+    images: ["/images/363545_KW_306.jpg"],
+  },
 };
 
 const geistSans = Geist({

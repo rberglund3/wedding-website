@@ -66,3 +66,28 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* app/globals.css */
+
+/* We create a 'keyframe' animation.
+  It moves the 'stroke-dashoffset' from a massive number (hidden)
+  back to 0 (fully drawn).
+*/
+@keyframes dashdraw {
+  from {
+    stroke-dashoffset: 1000; /* Start hidden */
+  }
+  to {
+    stroke-dashoffset: 0; /* Fully reveal the path */
+  }
+}
+
+/* This class applies the animation to the specific SVG path.
+*/
+.draw-names {
+  /* This must be longer than your actual path! */
+  stroke-dasharray: 1000; 
+  stroke-dashoffset: 1000;
+  animation: dashdraw 3s ease-out forwards;
+  animation-delay: 0.5s; /* Small delay before it starts drawing */
+}

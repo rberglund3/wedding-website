@@ -1,62 +1,50 @@
-'use client';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-screen w-full text-white overflow-hidden flex flex-col items-center justify-between font-serif">
-      
-      {/* --- Custom Smart Gradient Scrim --- 
-         We use environmental framing. This gradient is darker top-left 
-         to make the text absolutely pop, then fades to lighter twilight 
-         over the rest, beautifully defining the couple. Clear faces!
-      */}
-      <div className="absolute inset-0 z-0">
-        <Image 
-          src="/images/363545_KW_306.jpg" // The cinematic Tokyo night arch shot
-          alt="Rita & Wesley"
-          fill
-          priority
-          className="object-cover object-center"
-        />
-        {/* Customized gradient for on-screen success on glass (clears couple, strengthens behind text/panels) */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-black/60 via-transparent to-black/20 pointer-events-none"></div>
+    <main className="min-h-screen flex flex-col md:flex-row bg-stone-50 overflow-hidden">
+
+      <div className="w-full md:w-1/2 relative h-[50vh] md:h-screen">
+         <Image
+           src="/images/363545_KW_306.jpg"
+           alt="Rita and Wesley in Tokyo"
+           fill
+           className="object-cover object-center"
+           priority
+         />
       </div>
 
-      {/* Central focus area (the couple) is now clear. 
-         We use the surrounding structure as the 'canvas'.
-      */}
+      <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start p-12 md:p-24 lg:p-32 text-stone-800">
 
-      {/* Content Layer (z-10) with Z-Pattern framing */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-10 md:px-24 py-20 flex flex-col justify-between h-full">
-        
-        {/* Z-PATTERN: TOP LEFT (Announcement and names) */}
-        <div className="text-left animate-in fade-in slide-in-from-left-8 duration-1000">
-          
-          <p className="text-[10px] md:text-xs font-sans uppercase tracking-[0.5em] mb-4 text-white/70">
-            The Wedding of
-          </p>
-          <h1 className="text-5xl md:text-8xl font-light uppercase tracking-[0.2em] mb-6 drop-shadow-2xl">
-            Rita & Wesley
-          </h1>
-          <div className="w-16 h-[1px] bg-white/40 mt-6 md:w-32"></div>
+        <p className="text-xs uppercase tracking-[0.4em] text-emerald-800 font-bold mb-6 animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards duration-700">
+          The Wedding Of
+        </p>
 
-          {/* Subtext Detail with New York location */}
-          <div className="mt-10 space-y-4">
-            <p className="text-sm md:text-lg italic tracking-[0.15em] opacity-90">
-              October 24, 2026 — New York City
-            </p>
-          </div>
+        <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif text-stone-900 tracking-tight leading-none mb-8 text-center md:text-left animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards duration-700 delay-150">
+          Rita <br className="hidden md:block"/>
+          <span className="italic font-light text-stone-400">&</span> Wesley
+        </h1>
 
-          {/* Frosted Glass CTA Button in the top-left area */}
-          <Link 
-            href="/rsvp"
-            className="mt-12 inline-block px-12 py-4 border border-white/20 rounded-full text-[10px] uppercase tracking-[0.3em] font-sans backdrop-blur-md hover:bg-white hover:text-black transition-all duration-500 shadow-xl"
+        <div className="w-16 h-[1px] bg-rose-200 mb-8 animate-in fade-in fill-mode-backwards duration-700 delay-300"></div>
+
+        <p className="text-sm tracking-[0.2em] text-stone-500 uppercase mb-12 text-center md:text-left animate-in fade-in fill-mode-backwards duration-700 delay-500">
+          May 29, 2027 <br className="md:hidden" />
+          <span className="hidden md:inline mx-2 text-rose-300">•</span>
+          St. James, NY
+        </p>
+
+        <div className="animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards duration-700 delay-700">
+          <Link
+            href="/details"
+            className="inline-block px-10 py-4 bg-emerald-900 text-white uppercase tracking-[0.2em] text-xs hover:bg-emerald-800 transition-colors shadow-md"
           >
             Enter Site
           </Link>
         </div>
+
       </div>
+
     </main>
   );
 }

@@ -1,100 +1,97 @@
 'use client';
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+
+const navLinks = [
+  { name: 'Home', href: '/' },
+  { name: 'Details', href: '/details' },
+  { name: 'Travel', href: '/travel' },
+  { name: 'Gallery', href: '/photos' },
+  { name: 'Registry', href: '/registry' },
+  { name: 'RSVP', href: '/rsvp' },
+];
 
 export default function Navbar() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
-    const pathname = usePathname();
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
-    // change navbar background on scroll
-    useEffect (() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+  const isHome = pathname === '/';
 
-    const navLinks = [
-        { name: 'Home', href: '/' },
-        { name: 'Details', href: '/details' },
-        { name: 'RSVP', href: '/rsvp' },
-        { name: 'Travel', href: '/travel' },
-        { name: 'Registry', href: '/registry' },
-        { name: 'Gallery', href: '/gallery' },
-    ];
+  // Registry's hero photo runs dark, so its nav needs light text like Home does.
+  const darkTopRoutes = ['/registry'];
+  const isDarkTop = darkTopRoutes.includes(pathname);
 
-    return (
-    <nav 
-      className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
-        scrolled ? 'bg-black/20 backdrop-blur-lg py-4' : 'bg-transparent py-8'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
+  const mobileButtonColor = isHome || isDarkTop ? 'text-white' : 'text-stone-800';
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex gap-10">
-          {navLinks.map((link) => (
-            <Link 
-              key={link.name} 
-              href={link.href}
-              className={`text-[10px] uppercase tracking-[0.25em] transition-all hover:text-white/50 ${
-                pathname === link.href ? 'text-white border-b border-white/40 pb-1' : 'text-white/80'
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
+  return (
+    <>
+      <nav className="absolute top-0 w-full z-50 flex justify-center py-8">
+        <ul className="hidden md:flex gap-10 text-xs uppercase tracking-[0.2em]">
+          {navLinks.map((link, index) => {
 
-        {/* Mobile Toggle */}
-        <button 
-          className="md:hidden text-white focus:outline-none"
-          onClick={() => setIsOpen(!isOpen)}
+            // Home splits the nav over a photo on the left and cream background on the right,
+            // so the first 3 links need white text and the rest need dark text.
+            const isLeftHalf = index < 3;
+
+            const linkColor = isHome
+              ? (isLeftHalf ? 'text-white hover:text-white/70' : 'text-stone-800 hover:text-emerald-800')
+              : isDarkTop
+                ? 'text-white hover:text-white/70 drop-shadow-md'
+                : 'text-stone-800 hover:text-emerald-800';
+
+            const activeClass = pathname === link.href ? 'font-bold' : 'opacity-70';
+
+            return (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={`transition-colors ${linkColor} ${activeClass}`}
+                >
+                  {link.name}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+
+        <button
+          className={`md:hidden absolute right-6 top-6 p-2 ${mobileButtonColor}`}
+          onClick={() => setIsOpen(true)}
         >
-          <div className="w-6 h-px bg-white mb-1.5"></div>
-          <div className="w-6 h-px bg-white"></div>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
         </button>
-      </div>
+      </nav>
 
-      {/* Mobile Menu Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center animate-in fade-in duration-300">
-          
-          {/* Close Button: Make sure this is white! */}
-          <button 
+        <div className="fixed inset-0 z-[100] bg-stone-50/95 backdrop-blur-xl flex flex-col items-center justify-center animate-in fade-in duration-300">
+          <button
             onClick={() => setIsOpen(false)}
-            className="absolute top-8 right-8 text-white p-2"
+            className="absolute top-8 right-8 text-stone-900 p-2"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
 
-          {/* Navigation Links */}
           <nav className="flex flex-col items-center gap-12">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                onClick={() => setIsOpen(false)} // Close menu on click
+                onClick={() => setIsOpen(false)}
                 className={`text-2xl font-serif tracking-[0.2em] uppercase transition-colors ${
-                  pathname === link.href ? 'text-white' : 'text-white/50 hover:text-white'
+                  pathname === link.href ? 'text-emerald-800 font-bold' : 'text-stone-500 hover:text-stone-900'
                 }`}
               >
                 {link.name}
               </Link>
             ))}
           </nav>
-
-          {/* Tiny Ghibli Detail at the bottom */}
-          <div className="absolute bottom-12 opacity-20">
-            <p className="text-[8px] tracking-[0.4em] uppercase text-white">R & W — 2026</p>
-          </div>
-      </div>
-    )}
-    </nav>
+        </div>
+      )}
+    </>
   );
 }

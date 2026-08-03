@@ -35,8 +35,8 @@ export default function RegistryPage() {
         </div>
 
         <p className="max-w-xl mx-auto text-sm md:text-base italic text-stone-500 leading-relaxed">
-          &ldquo;Your presence is the only gift we require. However, if you would like to
-          contribute to our future, we&rsquo;ve set up a digital fund.&rdquo;
+          &ldquo;Your presence at our wedding is the greatest gift of all. But if you&rsquo;d
+          like to help us with our future adventures together, we&rsquo;ve set up a digital fund.&rdquo;
         </p>
       </div>
 

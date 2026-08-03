@@ -33,11 +33,11 @@ export default function RSVPPage() {
         setError('');
 
         const { data, error } = await supabase
-            .from('guests')
-            .select()
-            .ilike('first_name', firstName.trim())
-            .ilike('last_name', lastName.trim())
-            .single();
+            .rpc('find_guest', {
+                p_first_name: firstName.trim(),
+                p_last_name: lastName.trim()
+            })
+            .single<Guest>();
 
         if (error || !data) {
             setError("We couldn't find that name on the list. Please check the spelling!");
@@ -56,13 +56,14 @@ export default function RSVPPage() {
         if (!guest) return;
         setLoading(true);
         const { error } = await supabase
-            .from('guests')
-            .update({
-                rsvp_status: mainStatus,
-                plus_one_status: plusOneStatus,
-                dietary_restrictions: dietary
-            })
-            .eq('id', guest.id);
+            .rpc('submit_guest_rsvp', {
+                p_guest_id: guest.id,
+                p_first_name: guest.first_name,
+                p_last_name: guest.last_name,
+                p_rsvp_status: mainStatus,
+                p_plus_one_status: plusOneStatus,
+                p_dietary_restrictions: dietary
+            });
 
         if (error) {
             console.error(error);

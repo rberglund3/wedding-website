@@ -8,11 +8,14 @@ const isGalleryImage = (photo: GalleryImage | undefined): photo is GalleryImage 
   Boolean(photo);
 
 const featuredStartingIndex = 29;
-const featuredGalleryPhotos = [
-  ...galleryPhotos.slice(-2),
-  galleryPhotos[33],
-  galleryPhotos[29],
-].filter(isGalleryImage);
+const featuredGalleryPhotoSrcs = [
+  '/images/IMG_4291.jpg',
+  '/images/IMG_4449.jpg',
+  '/images/IMG_5365.jpg',
+];
+const featuredGalleryPhotos = featuredGalleryPhotoSrcs
+  .map((src) => galleryPhotos.find((photo) => photo.src === src))
+  .filter(isGalleryImage);
 const featuredGallerySrcs = new Set(featuredGalleryPhotos.map((photo) => photo.src));
 const photos = [
   ...galleryPhotos.slice(0, featuredStartingIndex),

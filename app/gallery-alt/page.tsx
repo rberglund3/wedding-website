@@ -29,14 +29,14 @@ const titleByYear: Record<string, string> = {
   '1997': 'Baby Wes',
   '1998': 'Baby Rita',
   '2017': 'First Adventures',
-  '2018': 'Early Days',
-  '2019': 'Favorite Snapshots',
+  '2018': 'Junior Year',
+  '2019': 'Senior Year',
   '2020': 'Summer Trails',
   '2021': 'Shared Weekends',
   '2022': 'Good Miles',
   '2023': 'Year in Photos',
-  '2024': 'More Favorites',
-  '2025': 'The proposal in Hakone',
+  '2024': 'Year of the Kuma',
+  '2025': 'Proposal in Hakone',
 };
 
 const noteForCount = (count: number, label: string) =>

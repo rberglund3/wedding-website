@@ -48,7 +48,6 @@ const imageData: GalleryImageInput[] = [
   ['IMG_1989.jpg', '2024-04-20T22:49:38', '3024 / 4032', 'Rita and Wesley together'],
   ['IMG_2756.jpg', '2024-09-27T23:24:00', '4032 / 3024', 'Rita and Wesley together'],
   ['IMG_0779.jpg', '2024-11-24T01:04:44', '3024 / 4032', 'Rita and Wesley together'],
-  ['IMG_1525.jpg', '2025-03-30T16:19:37', '4032 / 3024', 'Rita and Wesley together'],
   ['IMG_4718.jpg', '2025-06-14T10:07:53', '2316 / 3088', 'Rita and Wesley together'],
   ['IMG_4763.jpg', '2025-06-16T09:42:37', '3024 / 4032', 'Rita and Wesley together'],
   ['IMG_4764.jpg', '2025-06-16T09:42:58', '3024 / 4032', 'Rita and Wesley together'],

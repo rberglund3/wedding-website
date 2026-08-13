@@ -6,6 +6,7 @@ import { useState } from 'react';
 const navLinks = [
   { name: 'Home', href: '/' },
   { name: 'Details', href: '/details' },
+  { name: 'Timeline', href: '/gallery-alt' },
   { name: 'Travel', href: '/travel' },
   { name: 'Gallery', href: '/photos' },
   { name: 'Registry', href: '/registry' },
@@ -27,7 +28,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="absolute top-0 w-full z-50 flex justify-center py-8">
-        <ul className="hidden md:flex gap-10 text-xs uppercase tracking-[0.2em]">
+        <ul className="hidden md:flex gap-6 text-xs uppercase tracking-[0.2em] lg:gap-10">
           {navLinks.map((link, index) => {
 
             // Home splits the nav over a photo on the left and cream background on the right,

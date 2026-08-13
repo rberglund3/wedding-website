@@ -1,28 +1,36 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import PhotoLightbox from '@/components/photo-lightbox';
+import { type GalleryImage, galleryPhotos } from '@/lib/gallery-images';
 
-// ratio controls the polaroid's aspect ratio, e.g. '3 / 2' for landscape
+const isGalleryImage = (photo: GalleryImage | undefined): photo is GalleryImage =>
+  Boolean(photo);
+
+const featuredStartingIndex = 29;
+const featuredGalleryPhotos = [
+  ...galleryPhotos.slice(-2),
+  galleryPhotos[33],
+  galleryPhotos[29],
+].filter(isGalleryImage);
+const featuredGallerySrcs = new Set(featuredGalleryPhotos.map((photo) => photo.src));
 const photos = [
-  { src: '/images/363545_KW_306.jpg', alt: 'Tokyo Night Arch', ratio: '3 / 2' },
-  { src: '/images/363545_KW_030.jpg', alt: 'Sunshine', ratio: '2 / 3' },
-  { src: '/images/363545_KW_113.jpg', alt: 'Asakusa', ratio: '3 / 2' },
-  { src: '/images/363545_KW_196.jpg', alt: 'Walking', ratio: '2 / 3' },
-  { src: '/images/363545_KW_203.jpg', alt: 'Kaminarimon', ratio: '3 / 2' },
-  { src: '/images/363545_KW_260.jpg', alt: 'Ginza', ratio: '2 / 3' },
-  { src: '/images/363545_KW_346.jpg', alt: 'Tokyo Station', ratio: '3 / 2' },
-  { src: '/images/363545_KW_437.jpg', alt: 'Coats', ratio: '3 / 2' },
-  { src: '/images/363545_KW_458.jpg', alt: 'Tokyo Station 2', ratio: '3 / 2' }
+  ...galleryPhotos.slice(0, featuredStartingIndex),
+  ...featuredGalleryPhotos,
+  ...galleryPhotos
+    .slice(featuredStartingIndex)
+    .filter((photo) => !featuredGallerySrcs.has(photo.src)),
 ];
 
 // fixed per-card rotation so the stack looks hand-placed instead of random
 const tilt = (i: number) => {
-  const seq = [-3, 2.5, -1.5, 3.5, -2, 1.5, -3.5, 2, -1];
+  const seq = [-3, 2.5, -1.5, 3.5, -2, 1.5, -3.5, 2, -1, 4, -2.5, 3, -4, 1, -1.5, 2];
   return seq[i % seq.length];
 };
 
 export default function PhotosPage() {
   const [current, setCurrent] = useState(0);
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
   const total = photos.length;
 
   const next = useCallback(() => setCurrent((c) => (c + 1) % total), [total]);
@@ -30,12 +38,13 @@ export default function PhotosPage() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (selectedPhotoIndex !== null) return;
       if (e.key === 'ArrowRight') next();
       if (e.key === 'ArrowLeft') prev();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [next, prev]);
+  }, [next, prev, selectedPhotoIndex]);
 
   return (
     <main className="min-h-screen bg-stone-50 flex flex-col items-center pt-32 pb-24 px-6 relative overflow-hidden">
@@ -61,9 +70,9 @@ export default function PhotosPage() {
           </div>
 
           <p className="text-xs uppercase tracking-[0.3em] text-stone-500 leading-relaxed">
-            Some of our favorite moments.
+            Some of our favorite moments
             <br />
-            Tap a photo to flip through
+            In chronological order
           </p>
         </header>
 
@@ -99,9 +108,11 @@ export default function PhotosPage() {
             }
 
             return (
-              <div
+              <button
+                type="button"
                 key={photo.src}
-                onClick={isTop ? next : undefined}
+                aria-label={`Open ${photo.alt}`}
+                onClick={isTop ? () => setSelectedPhotoIndex(i) : undefined}
                 className={`absolute left-1/2 top-1/2 transition-all duration-500 ease-out ${
                   isTop ? 'cursor-pointer' : 'pointer-events-none'
                 }`}
@@ -109,20 +120,22 @@ export default function PhotosPage() {
               >
                 <div className="bg-[#FDFBF7] p-3 pb-14 shadow-[0_12px_30px_rgba(0,0,0,0.18)] border border-stone-200/70">
                   <div
-                    className="relative h-[clamp(280px,56vh,480px)] bg-stone-100 overflow-hidden"
+                    className="relative h-[clamp(280px,56vh,480px)] bg-stone-100 overflow-hidden p-2"
                     style={{ aspectRatio: photo.ratio }}
                   >
-                    <Image
-                      src={photo.src}
-                      alt={photo.alt}
-                      fill
-                      sizes="(max-width: 768px) 80vw, 400px"
-                      className="object-cover object-center"
-                      priority={pos <= 1}
-                    />
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={photo.src}
+                        alt={photo.alt}
+                        fill
+                        sizes="(max-width: 768px) 80vw, 400px"
+                        className="object-contain object-center"
+                        priority={pos <= 1}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
@@ -150,6 +163,12 @@ export default function PhotosPage() {
         </div>
 
       </div>
+      <PhotoLightbox
+        photos={photos}
+        currentIndex={selectedPhotoIndex}
+        onClose={() => setSelectedPhotoIndex(null)}
+        onSelectIndex={setSelectedPhotoIndex}
+      />
     </main>
   );
 }

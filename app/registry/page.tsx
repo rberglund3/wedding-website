@@ -1,6 +1,10 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
 
 export default function RegistryPage() {
+  const [showQrCode, setShowQrCode] = useState(false);
   const venmoHandle = "Rita-Berglund";
 
   return (
@@ -47,28 +51,42 @@ export default function RegistryPage() {
             The Newlywed Fund
           </span>
 
-          <div className="mt-8 mb-6 inline-block bg-white p-3 border border-stone-100 shadow-sm">
-            <Image
-              src="/images/venmo-qr.png"
-              alt="Venmo QR Code"
-              width={200}
-              height={200}
-              className="mx-auto"
-            />
-          </div>
+          {!showQrCode ? (
+            <button
+              type="button"
+              aria-controls="honeymoon-qr-code"
+              aria-expanded={showQrCode}
+              onClick={() => setShowQrCode(true)}
+              className="mt-8 block w-full bg-emerald-900 py-4 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800 focus-visible:ring-offset-4 focus-visible:ring-offset-white"
+            >
+              Contribute to the Honeymoon
+            </button>
+          ) : (
+            <div id="honeymoon-qr-code" className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+              <div className="mt-8 mb-6 inline-block bg-white p-3 border border-stone-100 shadow-sm">
+                <Image
+                  src="/images/venmo-qr.png"
+                  alt="Venmo QR Code"
+                  width={200}
+                  height={200}
+                  className="mx-auto"
+                />
+              </div>
 
-          <p className="text-xs uppercase tracking-[0.2em] text-stone-400 mb-8">
-            Scan to contribute via Venmo
-          </p>
+              <p className="text-xs uppercase tracking-[0.2em] text-stone-400 mb-8">
+                Scan to contribute via Venmo
+              </p>
 
-          <a
-            href={`https://venmo.com/u/${venmoHandle}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full bg-emerald-900 hover:bg-emerald-800 text-white py-4 uppercase tracking-[0.2em] text-xs font-medium transition-colors"
-          >
-            Open Venmo @{venmoHandle}
-          </a>
+              <a
+                href={`https://venmo.com/u/${venmoHandle}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full bg-emerald-900 hover:bg-emerald-800 text-white py-4 uppercase tracking-[0.2em] text-xs font-medium transition-colors"
+              >
+                Open Venmo @{venmoHandle}
+              </a>
+            </div>
+          )}
         </div>
       </section>
 

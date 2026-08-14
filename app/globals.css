@@ -7,3 +7,27 @@
     --radius: 0.5rem;
   }
 }
+
+@layer components {
+  .sakura-petal {
+    border-radius: 999px 999px 999px 0;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(253, 186, 216, 0.58) 54%,
+      rgba(251, 113, 133, 0.22) 100%
+    );
+    box-shadow:
+      inset -4px -6px 12px rgba(255, 255, 255, 0.62),
+      0 12px 28px rgba(244, 114, 182, 0.14);
+  }
+
+  .sakura-petal::after {
+    content: '';
+    position: absolute;
+    inset: 18% 38% 18% 26%;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.55);
+    transform: rotate(-16deg);
+  }
+}

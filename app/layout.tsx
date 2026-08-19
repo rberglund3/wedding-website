@@ -5,11 +5,11 @@ import Navbar from "@/components/navbar";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://wedding-website-mu-nine.vercel.app/'),
-  title: "Rita & Wesley | May 29, 2027",
-  description: "Join us for our wedding celebration in New York City.",
+  title: "Rita & Wesley",
+  description: "You're invited! Details inside.",
   openGraph: {
     title: "The Wedding of Rita & Wesley",
-    description: "May 29, 2027 — Flowerfield",
+    description: "You're invited! Details inside.",
     url: 'https://wedding-website-mu-nine.vercel.app/',
     siteName: 'Rita and Wesley Wedding',
     images: [
@@ -22,6 +22,10 @@ export const metadata: Metadata = {
     ],
     locale: 'en_US',
     type: 'website',
+  },
+  robots: {
+    index: false,
+    follow: false,
   },
 };
 

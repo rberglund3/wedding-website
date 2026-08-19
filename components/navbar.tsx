@@ -32,8 +32,8 @@ export default function Navbar() {
           {navLinks.map((link, index) => {
 
             // Home splits the nav over a photo on the left and cream background on the right,
-            // so the first 3 links need white text and the rest need dark text.
-            const isLeftHalf = index < 3;
+            // so the first 4 links need white text and the rest need dark text.
+            const isLeftHalf = index < 4;
 
             const linkColor = isHome
               ? (isLeftHalf ? 'text-white hover:text-white/70' : 'text-stone-800 hover:text-emerald-800')

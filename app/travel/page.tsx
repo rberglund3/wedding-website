@@ -82,15 +82,6 @@ export default function TravelPage() {
             >
               Book Room Block
             </a>
-
-            <div className="pt-8 border-t border-stone-100 max-w-md mx-auto">
-              <span className="text-xs uppercase tracking-widest text-emerald-800 font-semibold block mb-2">
-                Shuttle Service
-              </span>
-              <p className="text-sm opacity-70 italic">
-                Shuttle transportation details between the Hilton Garden Inn and the venue are currently TBD. Check back closer to the date for specific departure times!
-              </p>
-            </div>
           </div>
         </section>
 

@@ -29,19 +29,23 @@ export default function Navbar() {
     <>
       <nav className="absolute top-0 w-full z-50 flex justify-center py-8">
         <ul className="hidden md:flex gap-6 text-xs uppercase tracking-[0.2em] lg:gap-10">
-          {navLinks.map((link, index) => {
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
 
             // Home splits the nav over a photo on the left and cream background on the right,
-            // so the first 4 links need white text and the rest need dark text.
-            const isLeftHalf = index < 4;
-
+            // and that boundary shifts with viewport width, so instead of guessing which
+            // links land on which side, keep the text white everywhere and give it a dark
+            // shadow so it stays legible whether it lands on the photo or the cream background.
+            // (mix-blend-difference looked promising but only blends against backdrop within
+            // the same stacking context, and nav's own z-index stacking context blocks it
+            // from seeing main's background — confirmed with an isolated repro.)
             const linkColor = isHome
-              ? (isLeftHalf ? 'text-white hover:text-white/70' : 'text-stone-800 hover:text-emerald-800')
+              ? `${isActive ? 'text-white' : 'text-white/80'} [text-shadow:0_1px_3px_rgba(0,0,0,0.9),0_0_10px_rgba(0,0,0,0.4)]`
               : isDarkTop
-                ? 'text-white hover:text-white/70 drop-shadow-md'
-                : 'text-stone-800 hover:text-emerald-800';
+                ? `${isActive ? 'text-white' : 'text-white/70'} hover:text-white drop-shadow-md`
+                : `${isActive ? 'text-stone-800' : 'text-stone-800/70'} hover:text-emerald-800`;
 
-            const activeClass = pathname === link.href ? 'font-bold' : 'opacity-70';
+            const activeClass = isActive ? 'font-bold' : 'font-normal';
 
             return (
               <li key={link.href}>

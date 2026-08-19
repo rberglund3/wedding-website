@@ -1,7 +1,20 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { headers } from "next/headers";
 import { Geist, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
+
+async function ConditionalNavbar() {
+  const headersList = await headers();
+  const isGated = headersList.get("x-site-gate") === "locked";
+
+  if (isGated) {
+    return null;
+  }
+
+  return <Navbar />;
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://wedding-website-mu-nine.vercel.app/'),
@@ -50,7 +63,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.className} ${cormorant.variable} antialiased text-stone-800 bg-stone-50`}>
-        <Navbar />
+        <Suspense fallback={null}>
+          <ConditionalNavbar />
+        </Suspense>
         {children}
       </body>
     </html>

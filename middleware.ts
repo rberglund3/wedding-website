@@ -12,7 +12,11 @@ export function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
   url.pathname = "/enter-password";
   url.searchParams.set("redirect", request.nextUrl.pathname);
-  return NextResponse.rewrite(url);
+
+  const headers = new Headers(request.headers);
+  headers.set("x-site-gate", "locked");
+
+  return NextResponse.rewrite(url, { request: { headers } });
 }
 
 export const config = {

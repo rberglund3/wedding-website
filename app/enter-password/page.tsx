@@ -1,12 +1,20 @@
+import { Suspense } from "react";
 import PasswordForm from "./password-form";
 
-export default async function EnterPasswordPage({
+async function PasswordFormWithRedirect({
   searchParams,
 }: {
   searchParams: Promise<{ redirect?: string }>;
 }) {
   const { redirect } = await searchParams;
+  return <PasswordForm redirectTo={redirect || "/"} />;
+}
 
+export default function EnterPasswordPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ redirect?: string }>;
+}) {
   return (
     <main className="min-h-screen flex items-center justify-center px-6 bg-stone-50 text-stone-800">
       <div className="max-w-sm w-full text-center">
@@ -17,7 +25,9 @@ export default async function EnterPasswordPage({
         <p className="text-sm opacity-70 mb-8">
           This site is private. Please enter the password from your invitation to continue.
         </p>
-        <PasswordForm redirectTo={redirect || "/"} />
+        <Suspense fallback={<PasswordForm redirectTo="/" />}>
+          <PasswordFormWithRedirect searchParams={searchParams} />
+        </Suspense>
       </div>
     </main>
   );

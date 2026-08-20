@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -16,6 +16,19 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+
+  // Home splits the nav over a photo on the left and cream background on the right, and that
+  // boundary shifts with viewport width, so rather than guessing which links land on which side
+  // by index, measure each link's actual position and color it based on where it really lands.
+  // A link can also straddle the boundary itself (part of the word on each side) — for that one,
+  // split the word's own color at the exact pixel the boundary crosses it, so it stays flat
+  // two-tone (matching the rest of the nav) instead of needing a shadow.
+  type Zone = 'left' | 'right' | 'straddle';
+  interface LinkPosition { zone: Zone; splitPercent: number; }
+  const [linkPositions, setLinkPositions] = useState<LinkPosition[]>(
+    navLinks.map((_, i) => ({ zone: i < 4 ? 'left' : 'right', splitPercent: 50 }))
+  );
 
   const isHome = pathname === '/';
 
@@ -23,37 +36,76 @@ export default function Navbar() {
   const darkTopRoutes = ['/registry'];
   const isDarkTop = darkTopRoutes.includes(pathname);
 
+  useLayoutEffect(() => {
+    if (!isHome) return;
+
+    function measure() {
+      const midpoint = window.innerWidth / 2;
+      setLinkPositions(
+        linkRefs.current.map((el): LinkPosition => {
+          if (!el) return { zone: 'left', splitPercent: 100 };
+          const rect = el.getBoundingClientRect();
+          if (rect.right <= midpoint) return { zone: 'left', splitPercent: 100 };
+          if (rect.left >= midpoint) return { zone: 'right', splitPercent: 0 };
+          return { zone: 'straddle', splitPercent: ((midpoint - rect.left) / rect.width) * 100 };
+        })
+      );
+    }
+
+    measure();
+    window.addEventListener('resize', measure);
+
+    // Nav text renders in a fallback font first, then swaps to the loaded Google Font
+    // (next/font's `display: swap`), which can shift link widths enough to move a link
+    // across the boundary after the initial measurement — so re-measure once fonts settle.
+    document.fonts.ready.then(measure);
+
+    return () => window.removeEventListener('resize', measure);
+  }, [isHome]);
+
   const mobileButtonColor = isHome || isDarkTop ? 'text-white' : 'text-stone-800';
 
   return (
     <>
       <nav className="absolute top-0 w-full z-50 flex justify-center py-8">
         <ul className="hidden md:flex gap-6 text-xs uppercase tracking-[0.2em] lg:gap-10">
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href;
+          {navLinks.map((link, index) => {
+            const position = linkPositions[index];
+            const isSplit = isHome && position.zone === 'straddle';
 
-            // Home splits the nav over a photo on the left and cream background on the right,
-            // and that boundary shifts with viewport width, so instead of guessing which
-            // links land on which side, keep the text white everywhere and give it a dark
-            // shadow so it stays legible whether it lands on the photo or the cream background.
-            // (mix-blend-difference looked promising but only blends against backdrop within
-            // the same stacking context, and nav's own z-index stacking context blocks it
-            // from seeing main's background — confirmed with an isolated repro.)
             const linkColor = isHome
-              ? `${isActive ? 'text-white' : 'text-white/80'} [text-shadow:0_1px_3px_rgba(0,0,0,0.9),0_0_10px_rgba(0,0,0,0.4)]`
+              ? isSplit
+                ? ''
+                : position.zone === 'left'
+                  ? 'text-white hover:text-white/70'
+                  : 'text-stone-800 hover:text-emerald-800'
               : isDarkTop
-                ? `${isActive ? 'text-white' : 'text-white/70'} hover:text-white drop-shadow-md`
-                : `${isActive ? 'text-stone-800' : 'text-stone-800/70'} hover:text-emerald-800`;
+                ? 'text-white hover:text-white/70 drop-shadow-md'
+                : 'text-stone-800 hover:text-emerald-800';
 
-            const activeClass = isActive ? 'font-bold' : 'font-normal';
+            const activeClass = pathname === link.href ? 'font-bold' : 'opacity-70';
 
             return (
               <li key={link.href}>
                 <Link
+                  ref={(el) => { linkRefs.current[index] = el; }}
                   href={link.href}
-                  className={`transition-colors ${linkColor} ${activeClass}`}
+                  className={`transition-colors ${linkColor} ${activeClass} ${isSplit ? 'relative inline-block' : ''}`}
                 >
-                  {link.name}
+                  {isSplit ? (
+                    <>
+                      <span className="text-white">{link.name}</span>
+                      <span
+                        aria-hidden="true"
+                        className="absolute inset-0 overflow-hidden text-stone-800"
+                        style={{ clipPath: `inset(0 0 0 ${position.splitPercent}%)` }}
+                      >
+                        {link.name}
+                      </span>
+                    </>
+                  ) : (
+                    link.name
+                  )}
                 </Link>
               </li>
             );

@@ -1,3 +1,16 @@
+const roomBlocks = [
+  {
+    name: "Hilton Garden Inn Stony Brook",
+    location: "Stony Brook, NY",
+    bookUrl: "https://group.hiltongardeninn.com/7t362w"
+  },
+  {
+    name: "Residence Inn by Marriott Long Island Hauppauge/Islandia",
+    location: "Hauppauge / Islandia, NY",
+    bookUrl: "https://www.marriott.com/event-reservations/reservation-link.mi?id=1787258604739&key=GRP&app=resvlink&_branch_match_id=1451761477639974305&_branch_referrer=H4sIAAAAAAAAA8soKSkottLXTywo0MtNLCrKzC8p0UvOz9UvSi0uy0wtN7LPTLE1NLcwNzK1MDMwMTe2VMtOrbR1DwpQA2qxBanKyczLVqsrSk1LBWrPS49PKsovL04tsnXOKMrPTQUAwSI1U2EAAAA%3D"
+  }
+];
+
 const alternativeHotels = [
   {
     name: "Hyatt Regency Long Island",
@@ -8,11 +21,6 @@ const alternativeHotels = [
     name: "Holiday Inn Express Hauppauge-Long Island by IHG",
     location: "Hauppauge, NY",
     query: "Holiday+Inn+Express+Hauppauge"
-  },
-  {
-    name: "Residence Inn by Marriott Long Island",
-    location: "Hauppauge / Islandia, NY",
-    query: "Residence+Inn+Hauppauge"
   },
   {
     name: "Hampton Inn Long Island / Islandia",
@@ -55,34 +63,39 @@ export default function TravelPage() {
 
       <div className="max-w-5xl mx-auto space-y-24">
 
-        <section className="relative border border-emerald-900/10 p-8 md:p-16 text-center bg-white shadow-sm overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-emerald-800/20"></div>
-
-          <span className="text-xs uppercase tracking-[0.2em] text-emerald-800 font-bold">
-            Official Room Block
-          </span>
-
-          <h2 className="text-3xl md:text-4xl font-serif mt-6 mb-2 text-stone-900">
-            Hilton Garden Inn Stony Brook
-          </h2>
-          <p className="text-sm opacity-70 mb-8 uppercase tracking-widest">
-            Stony Brook, NY
-          </p>
-
-          <p className="mb-10 max-w-lg mx-auto opacity-80 leading-relaxed">
-            We have secured a block of rooms at a discounted rate. Please use the link below to book your stay, or mention our names when calling the front desk.
-          </p>
-
-          <div className="space-y-6">
-            <a
-              href="https://group.hiltongardeninn.com/7t362w"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block px-10 py-4 bg-emerald-800 text-white uppercase tracking-widest text-xs hover:bg-emerald-900 transition-colors"
+        <section className="grid md:grid-cols-2 gap-8">
+          {roomBlocks.map((hotel) => (
+            <div
+              key={hotel.name}
+              className="relative border border-emerald-900/10 p-8 md:p-12 text-center bg-white shadow-sm overflow-hidden flex flex-col"
             >
-              Book Room Block
-            </a>
-          </div>
+              <div className="absolute top-0 left-0 w-full h-1 bg-emerald-800/20"></div>
+
+              <span className="text-xs uppercase tracking-[0.2em] text-emerald-800 font-bold">
+                Official Room Block
+              </span>
+
+              <h2 className="text-2xl md:text-3xl font-serif mt-6 mb-2 text-stone-900">
+                {hotel.name}
+              </h2>
+              <p className="text-sm opacity-70 mb-8 uppercase tracking-widest">
+                {hotel.location}
+              </p>
+
+              <p className="mb-10 opacity-80 leading-relaxed flex-1">
+                We have secured a block of rooms at a discounted rate. Please use the link below to book your stay, or mention our names when calling the front desk.
+              </p>
+
+              <a
+                href={hotel.bookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-10 py-4 bg-emerald-800 text-white uppercase tracking-widest text-xs hover:bg-emerald-900 transition-colors"
+              >
+                Book Room Block
+              </a>
+            </div>
+          ))}
         </section>
 
         <section>

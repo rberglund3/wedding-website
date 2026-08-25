@@ -2,14 +2,13 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import PhotoLightbox from '@/components/photo-lightbox';
+import PhotoLightbox, { type LightboxMedia } from '@/components/photo-lightbox';
 import { type GalleryImage, galleryPhotos } from '@/lib/gallery-images';
 
 type TimelineMoment = {
   key: string;
   time: string;
   title: string;
-  note: string;
   sort: string;
   photos: TimelineMedia[];
 };
@@ -31,16 +30,13 @@ const titleByYear: Record<string, string> = {
   '2017': 'First Adventures',
   '2018': 'Junior Year',
   '2019': 'Senior Year',
-  '2020': 'Summer Trails',
-  '2021': 'Shared Weekends',
-  '2022': 'Good Miles',
-  '2023': 'Year in Photos',
+  '2020': 'Year of the Chunk',
+  '2021': 'Covid times',
+  '2022': 'Traveling around',
+  '2023': 'Traveling around some more',
   '2024': 'Year of the Kuma',
-  '2025': 'Proposal in Hakone',
+  '2025': 'Proposal in Hakone 😊 🇯🇵',
 };
-
-const noteForCount = (count: number, label: string) =>
-  `${count} ${count === 1 ? 'moment' : 'moments'} from ${label}.`;
 
 const getMomentInfo = (photo: TimelineMedia) => {
   if (!photo.takenAt) {
@@ -49,7 +45,6 @@ const getMomentInfo = (photo: TimelineMedia) => {
       time: 'Date TBD',
       title: 'Scanned Favorites',
       sort: '9999',
-      label: 'undated scans',
     };
   }
 
@@ -61,7 +56,6 @@ const getMomentInfo = (photo: TimelineMedia) => {
       time: '2026',
       title: 'Japan Pre Wedding Shoot',
       sort: '2026-01-27',
-      label: 'the Japan pre wedding shoot',
     };
   }
 
@@ -70,7 +64,6 @@ const getMomentInfo = (photo: TimelineMedia) => {
     time: year,
     title: titleByYear[year] ?? year,
     sort: year,
-    label: year,
   };
 };
 
@@ -83,17 +76,35 @@ const proposalVideo: TimelineVideo = {
   rotate: 3,
 };
 
+const timelineOnlyPhotos: GalleryImage[] = [
+  {
+    src: '/images/chunk.png',
+    alt: 'Chunk',
+    ratio: '1179 / 1561',
+    takenAt: '2020-06-27T00:00:00',
+    dateSource: 'embedded',
+    browserSafe: true,
+    displayInGallery: false,
+    rotate: 2,
+  },
+];
 const featuredPhotoOrder = ['/images/top-wes-portrait.jpg', '/images/top-rita.png'];
 const featuredPhotos = featuredPhotoOrder
   .map((src) => galleryPhotos.find((photo) => photo.src === src))
   .filter((photo): photo is GalleryImage => Boolean(photo));
 const featuredPhotoSrcs = new Set(featuredPhotoOrder);
+const timelineExcludedPhotoSrcs = new Set([
+  ...featuredPhotoSrcs,
+  '/images/00379808-FA8B-4D0F-807F-577972775DED_1_201_a.jpeg',
+  '/images/IMG_5365.jpg',
+]);
 const isSpringFavoritesPhoto = (photo: GalleryImage) =>
   photo.takenAt?.startsWith('2026-') && !photo.takenAt.startsWith('2026-01-27');
 const timelinePhotos: TimelineMedia[] = [
   ...galleryPhotos.filter(
-    (photo) => !featuredPhotoSrcs.has(photo.src) && !isSpringFavoritesPhoto(photo),
+    (photo) => !timelineExcludedPhotoSrcs.has(photo.src) && !isSpringFavoritesPhoto(photo),
   ),
+  ...timelineOnlyPhotos,
   proposalVideo,
 ];
 
@@ -104,7 +115,6 @@ const timeline = timelinePhotos
 
     if (existing) {
       existing.photos.push(photo);
-      existing.note = noteForCount(existing.photos.length, info.label);
       return moments;
     }
 
@@ -112,7 +122,6 @@ const timeline = timelinePhotos
       key: info.key,
       time: info.time,
       title: info.title,
-      note: noteForCount(1, info.label),
       sort: info.sort,
       photos: [photo],
     });
@@ -120,12 +129,25 @@ const timeline = timelinePhotos
     return moments;
   }, new Map<string, TimelineMoment>());
 
-const timelineMoments = Array.from(timeline.values()).sort((a, b) =>
-  a.sort.localeCompare(b.sort),
-);
+const compareTimelineMedia = (a: TimelineMedia, b: TimelineMedia) => {
+  const takenAtComparison = (a.takenAt ?? '9999').localeCompare(b.takenAt ?? '9999');
+  return takenAtComparison || a.src.localeCompare(b.src);
+};
+
+const timelineMoments = Array.from(timeline.values())
+  .map((moment) => ({
+    ...moment,
+    photos: [...moment.photos].sort(compareTimelineMedia),
+  }))
+  .sort((a, b) => a.sort.localeCompare(b.sort));
 
 const isTimelineVideo = (photo: TimelineMedia): photo is TimelineVideo =>
   photo.kind === 'video';
+
+const timelineLightboxPhotos: LightboxMedia[] = [
+  ...featuredPhotos,
+  ...timelineMoments.flatMap((moment) => moment.photos),
+];
 
 const sakuraPetals = [
   'left-[6%] top-36 h-14 w-9 -rotate-[28deg] opacity-55',
@@ -367,7 +389,7 @@ export default function GalleryAltPage() {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
 
   const openPhoto = (photo: GalleryImage) => {
-    const index = galleryPhotos.findIndex((galleryPhoto) => galleryPhoto.src === photo.src);
+    const index = timelineLightboxPhotos.findIndex((galleryPhoto) => galleryPhoto.src === photo.src);
     if (index >= 0) setSelectedPhotoIndex(index);
   };
 
@@ -431,9 +453,6 @@ export default function GalleryAltPage() {
                     <h2 className="mb-4 font-serif text-3xl text-stone-900 md:text-4xl">
                       {moment.title}
                     </h2>
-                    <p className="mx-0 max-w-md text-sm leading-7 text-stone-600 md:ml-auto">
-                      {moment.note}
-                    </p>
                   </div>
 
                   <MomentMediaGrid
@@ -448,7 +467,7 @@ export default function GalleryAltPage() {
         </div>
       </div>
       <PhotoLightbox
-        photos={galleryPhotos}
+        photos={timelineLightboxPhotos}
         currentIndex={selectedPhotoIndex}
         onClose={() => setSelectedPhotoIndex(null)}
         onSelectIndex={setSelectedPhotoIndex}

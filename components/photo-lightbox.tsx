@@ -4,8 +4,12 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import { type GalleryImage } from '@/lib/gallery-images';
 
+export type LightboxMedia = Pick<GalleryImage, 'src' | 'alt' | 'ratio'> & {
+  kind?: 'image' | 'video';
+};
+
 type PhotoLightboxProps = {
-  photos: GalleryImage[];
+  photos: LightboxMedia[];
   currentIndex: number | null;
   onClose: () => void;
   onSelectIndex: (index: number) => void;
@@ -19,6 +23,7 @@ export default function PhotoLightbox({
 }: PhotoLightboxProps) {
   const currentPhoto = currentIndex === null ? null : photos[currentIndex];
   const total = photos.length;
+  const isVideo = currentPhoto?.kind === 'video';
 
   useEffect(() => {
     if (currentIndex === null) return;
@@ -78,14 +83,25 @@ export default function PhotoLightbox({
             className="relative max-h-[76vh] w-full overflow-hidden bg-stone-100"
             style={{ aspectRatio: currentPhoto.ratio }}
           >
-            <Image
-              src={currentPhoto.src}
-              alt={currentPhoto.alt}
-              fill
-              sizes="92vw"
-              className="object-contain"
-              priority
-            />
+            {isVideo ? (
+              <video
+                src={currentPhoto.src}
+                aria-label={currentPhoto.alt}
+                controls
+                playsInline
+                preload="metadata"
+                className="h-full w-full object-contain"
+              />
+            ) : (
+              <Image
+                src={currentPhoto.src}
+                alt={currentPhoto.alt}
+                fill
+                sizes="92vw"
+                className="object-contain"
+                priority
+              />
+            )}
           </div>
         </div>
       </div>

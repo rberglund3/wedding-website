@@ -49,7 +49,7 @@ export default function DetailsPage() {
             02 — Where
           </span>
           <h2 className="text-4xl md:text-5xl font-serif text-stone-900 transition-colors group-hover:text-emerald-800 duration-500">
-            Flowerfield
+            Flowerfield Celebrations
           </h2>
           <p className="mt-6 text-xs uppercase tracking-[0.2em] text-stone-500 leading-relaxed">
             199 Mills Pond Road

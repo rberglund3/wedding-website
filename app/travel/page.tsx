@@ -63,39 +63,42 @@ export default function TravelPage() {
 
       <div className="max-w-5xl mx-auto space-y-24">
 
-        <section className="grid md:grid-cols-2 gap-8">
-          {roomBlocks.map((hotel) => (
-            <div
-              key={hotel.name}
-              className="relative border border-emerald-900/10 p-8 md:p-12 text-center bg-white shadow-sm overflow-hidden flex flex-col"
-            >
-              <div className="absolute top-0 left-0 w-full h-1 bg-emerald-800/20"></div>
+        <section>
+          <div className="text-center mb-10">
+            <span className="text-xs uppercase tracking-[0.2em] text-emerald-800 font-bold">
+              Official Room Blocks
+            </span>
+            <p className="mt-4 max-w-lg mx-auto opacity-80 leading-relaxed">
+              We have secured blocks of rooms at a discounted rate. Please use the links below to book your stay, or mention our names when calling the front desk.
+            </p>
+          </div>
 
-              <span className="text-xs uppercase tracking-[0.2em] text-emerald-800 font-bold">
-                Official Room Block
-              </span>
-
-              <h2 className="text-2xl md:text-3xl font-serif mt-6 mb-2 text-stone-900">
-                {hotel.name}
-              </h2>
-              <p className="text-sm opacity-70 mb-8 uppercase tracking-widest">
-                {hotel.location}
-              </p>
-
-              <p className="mb-10 opacity-80 leading-relaxed flex-1">
-                We have secured a block of rooms at a discounted rate. Please use the link below to book your stay, or mention our names when calling the front desk.
-              </p>
-
-              <a
-                href={hotel.bookUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-10 py-4 bg-emerald-800 text-white uppercase tracking-widest text-xs hover:bg-emerald-900 transition-colors"
+          <div className="grid md:grid-cols-2 gap-8">
+            {roomBlocks.map((hotel) => (
+              <div
+                key={hotel.name}
+                className="relative border border-emerald-900/10 p-8 md:p-12 text-center bg-white shadow-sm overflow-hidden flex flex-col"
               >
-                Book Room Block
-              </a>
-            </div>
-          ))}
+                <div className="absolute top-0 left-0 w-full h-1 bg-emerald-800/20"></div>
+
+                <h2 className="text-2xl md:text-3xl font-serif mb-2 text-stone-900">
+                  {hotel.name}
+                </h2>
+                <p className="text-sm opacity-70 mb-10 uppercase tracking-widest flex-1">
+                  {hotel.location}
+                </p>
+
+                <a
+                  href={hotel.bookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-10 py-4 bg-emerald-800 text-white uppercase tracking-widest text-xs hover:bg-emerald-900 transition-colors"
+                >
+                  Book Room Block
+                </a>
+              </div>
+            ))}
+          </div>
         </section>
 
         <section>

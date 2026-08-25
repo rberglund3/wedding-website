@@ -68,7 +68,7 @@ export default function DetailsPage() {
             Formal
           </h2>
           <p className="mt-6 text-xs uppercase tracking-[0.2em] text-stone-500">
-            Floor-length silhouettes, tuxedos, or formal suits. Prints and colors are warmly welcomed.
+            Floor or ankle-length silhouettes, tuxedos, or formal suits. Prints and colors are warmly welcomed.
           </p>
         </section>
 

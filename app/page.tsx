@@ -10,18 +10,18 @@ export default function HomePage() {
            src="/images/363545_KW_306.jpg"
            alt="Rita and Wesley in Tokyo"
            fill
-           className="object-cover object-center"
+           className="object-cover object-[66%_center]"
            priority
          />
       </div>
 
-      <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start p-12 md:p-24 lg:p-32 text-stone-800">
+      <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start p-12 sm:p-16 md:p-16 lg:p-24 xl:p-32 text-stone-800">
 
         <p className="text-xs uppercase tracking-[0.4em] text-emerald-800 font-bold mb-6 animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards duration-700">
           The Wedding Of
         </p>
 
-        <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif text-stone-900 tracking-tight leading-none mb-8 text-center md:text-left animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards duration-700 delay-150">
+        <h1 className="text-6xl sm:text-7xl md:text-6xl lg:text-7xl xl:text-8xl font-serif text-stone-900 tracking-tight leading-none mb-8 text-center md:text-left animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards duration-700 delay-150">
           Rita <br className="hidden md:block"/>
           <span className="italic font-light text-stone-400">&</span> Wesley
         </h1>

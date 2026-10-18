@@ -38,7 +38,7 @@ export default function DetailsPage() {
             May 29, 2027
           </h2>
           <p className="mt-6 text-xs uppercase tracking-[0.2em] text-stone-500">
-            Saturday Evening
+            Saturday 7pm
           </p>
         </section>
 
